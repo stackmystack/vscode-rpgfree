@@ -2,42 +2,34 @@ import * as vscode from 'vscode';
 import { RpgleFree } from './RpgleFree.mjs';
 
 function convert() {
-
   const editor = vscode.window.activeTextEditor;
-  const eol = editor.document.eol === 1 ? '\n' : '\r\n';
+  const eol = editor.document.eol === vscode.EndOfLine.LF ? '\n' : '\r\n';
 
-  // Get the selected text from the editor
-  let curRange = new vscode.Range(editor.selection.start, editor.selection.end);
-  let text = editor.document.getText(editor.selection);
-
-  // If no text select, then use the full document
-  if (text == '') {
-    const fullText = editor.document.getText();
-    curRange = new vscode.Range(editor.document.positionAt(0), editor.document.positionAt(fullText.length - 1));
-    // If converting everything we should add **FREE to the start
+  let curRange;
+  let text;
+  // Get text
+  if (editor.selection.isEmpty) {
+    curRange = new vscode.Range(
+      editor.document.positionAt(0),
+      editor.document.positionAt(editor.document.getText().length - 1)
+    );
     text = '**FREE' + eol + editor.document.getText();
-  };
+  } else {
+    curRange = new vscode.Range(editor.selection.start, editor.selection.end);
+    text = editor.document.getText(editor.selection);
+  }
 
-  // Break into an array
+  // Convert
   let lines = text.split(eol);
+  new RpgleFree(lines, 2).parse();
 
-  // Start with the indent value being a constant
-  // We'll add a configuration setting for this in the future
-  const indent = 2;
-
-  // Convert the array of lines to free format
-  let conv = new RpgleFree(lines, indent);
-  conv.parse();
-
-  // Replace the text
+  // Replace
   editor.edit(editBuilder => {
     editBuilder.replace(curRange, lines.join(eol));
   })
 
   vscode.window.showInformationMessage('Selected text converted to free format');
-
   vscode.commands.executeCommand('editor.action.formatDocument');
-
 }
 
 export function activate(context) {
