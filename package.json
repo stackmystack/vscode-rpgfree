@@ -44,6 +44,26 @@
 					"when": "editorLangId == rpgle"
 				}
 			]
+		},
+		"configuration": {
+			"title": "RPGLE Free Converter",
+			"properties": {
+				"vscode-rpgfree.indent": {
+					"type": "integer",
+					"default": 2,
+					"description": "Number of spaces used as indentation"
+				},
+				"vscode-rpgfree.eol": {
+					"type": "string",
+					"enum": [
+						"LF",
+						"CRLF",
+						"inherit"
+					],
+					"default": "inherit",
+					"description": "Specifies whether to preserve (inherit) line feeds, or to force a value (LF or CRLF)"
+				}
+			}
 		}
 	},
 	"scripts": {

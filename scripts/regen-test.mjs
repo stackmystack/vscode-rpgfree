@@ -1,9 +1,9 @@
-import { eol, indent, read, runDirs, write } from '../lib/testsuite.mjs';
+import { read, runDirs, settings, write } from '../lib/testsuite.mjs';
 import { RpgleFree } from '../src/RpgleFree.mjs';
 
 function regen(dir) {
   const input = read(dir);
-  const output = new RpgleFree(input, eol, indent).parse();
+  const output = new RpgleFree(input, settings).parse();
   write(dir, output);
 }
 

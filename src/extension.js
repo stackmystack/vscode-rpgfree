@@ -1,10 +1,11 @@
 import * as vscode from 'vscode';
 import { RpgleFree } from './RpgleFree.mjs';
+import { vscodeSettings } from './settings';
+
+const editor = vscode.window.activeTextEditor;
 
 function convert() {
-  const editor = vscode.window.activeTextEditor;
-  const eol = editor.document.eol === vscode.EndOfLine.LF ? '\n' : '\r\n';
-
+  const settings = vscodeSettings();
   let curRange;
   let text;
   // Get text
@@ -13,14 +14,14 @@ function convert() {
       editor.document.positionAt(0),
       editor.document.positionAt(editor.document.getText().length - 1)
     );
-    text = '**FREE' + eol + editor.document.getText();
+    text = '**FREE' + settings.eol + editor.document.getText();
   } else {
     curRange = new vscode.Range(editor.selection.start, editor.selection.end);
     text = editor.document.getText(editor.selection);
   }
 
   // Convert
-  const lines = new RpgleFree(text, eol, 2).parse();
+  const lines = new RpgleFree(text, settings).parse();
 
   // Replace
   editor.edit(editBuilder => {
