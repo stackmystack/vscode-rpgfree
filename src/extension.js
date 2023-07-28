@@ -20,12 +20,11 @@ function convert() {
   }
 
   // Convert
-  let lines = text.split(eol);
-  new RpgleFree(lines, 2).parse();
+  const lines = new RpgleFree(text, eol, 2).parse();
 
   // Replace
   editor.edit(editBuilder => {
-    editBuilder.replace(curRange, lines.join(eol));
+    editBuilder.replace(curRange, lines);
   })
 
   vscode.window.showInformationMessage('Selected text converted to free format');

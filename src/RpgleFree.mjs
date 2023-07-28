@@ -20,9 +20,10 @@ class Message {
 }
 
 export class RpgleFree {
-  constructor(lines, indent) {
+  constructor(text, eol, indent) {
     this.currentLine = -1;
-    this.lines = lines;
+    this.eol = eol;
+    this.lines = text.split(this.eol);
     this.indent = indent;
     this.vars = {
       '*DATE': {
@@ -375,5 +376,7 @@ export class RpgleFree {
       }
       wasSub = false;
     }
+
+    return this.lines.join(this.eol);
   }
 }
